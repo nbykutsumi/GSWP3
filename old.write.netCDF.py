@@ -28,24 +28,31 @@ for attr in ncIn.ncattrs():
     Attr[attr] = ncIn.getncattr(attr)
 
 
+# load output file
 print Attr
-
-#print ncIn.dimensions
-# Create file
 outPath = "./temp.nc"
 ncOut= Dataset(outPath, "w", format="NETCDF4")
 
-# Dimension
-ncOut.createDimension("lat", len(Lat))
-ncOut.createDimension("lon", len(Lon))
-ncOut.createDimension("time", len(Time))
 
 
-# Variables
-ncOut.createVariable("lat",  TypeLat,  ("lat",))
-ncOut.createVariable("lon",  TypeLon,  ("lon",))
-ncOut.createVariable("time", TypeTime, ("time",))
-ncOut.createVariable(varName,  TypeDat,  ("time", "lat", "lon"))
+
+#print ncIn.dimensions
+## Create file
+#outPath = "./temp.nc"
+#ncOut= Dataset(outPath, "w", format="NETCDF4")
+
+## Dimension
+#ncOut.createDimension("lat", len(Lat))
+#ncOut.createDimension("lon", len(Lon))
+#ncOut.createDimension("time", len(Time))
+#
+#
+## Variables
+#lat  = ncOut.createVariable("lat",  TypeLat,  ("lat",))
+#lon  = ncOut.createVariable("lon",  TypeLon,  ("lon",))
+#time = ncOut.createVariable("time", TypeTime, ("time",))
+#dat  = ncOut.createVariable(varName,  TypeDat,  ("time", "lat", "lon"))
+
 
 # Attributes
 for attr in Attr.keys():
@@ -54,3 +61,11 @@ for attr in Attr.keys():
 # close and write file
 ncOut.close()
 print outPath
+
+
+print ncOut["lat"] == ncIn["lat"]
+print ncOut["lon"] == ncIn["lon"]
+print ncOut["time"] == ncIn["time"]
+print ncOut[varName] == ncIn[varName]
+
+

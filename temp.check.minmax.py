@@ -1,5 +1,5 @@
-import matplotlib as mpl
-mpl.use("Agg")
+#import matplotlib as mpl
+#mpl.use("Agg")
 import GSWP3
 from numpy import *
 import numpy as np
@@ -9,57 +9,45 @@ import myfunc.fig.Fig as Fig
 import calendar
 from datetime import datetime, timedelta
 from netCDF4 import Dataset
-from mpl_toolkits.basemap import Basemap
+#from mpl_toolkits.basemap import Basemap
 
 
 prjName= "GSWP3"
 expr = "EXP1"
 gswp = GSWP3.GSWP3()
 gswp(expr=expr)
-ny, nx = gswp.ny, gswp.nx
 
 #lvarName = ["SWdown","LWdown"]
 #lvarName = ["Prcp","Wind","Tair","Qair","PSurf"]
 lvarName = ["Prcp","Rainf","Snowf"]
 #lvarName = ["SWdown","LWdown","Tair","Qair","PSurf"]
-#lvarName  = ["Wind"]
+#lvarName = ["Wind"]
 baseDir = "/work/a01/utsumi/GSWP3"
 iYear = 2014
 eYear = 2014
 
-#iYear = 2010
+#iYear = 2009
 #eYear = 2010
+
 lYear = range(iYear,eYear+1)
 lMon  = range(1,12+1)
 miss  = -9999.
-
-ver   = "new"
-#ver   = "org"
-#ver   = "sts"
+ver  = "new"
+#ver  = "org"
 
 vminmax = {"SWdown":[100,300], "LWdown":[100,400], "Prcp":[0,10], "Rainf":[0,10], "Snowf":[0,10],"Wind":[0,10], "Tair":[230,310], "Qair":[0.002, 0.02], "PSurf":[800,1020]}
 
 for varName in lvarName:
     for Year in lYear:
-    #for Year in lYear[::20]:
         if ver=="new":
             baseDir = "/data2/hjkim/GSWP3/from_tank.bin/out"
             srcDir  = baseDir + "/%s"%(varName)
             srcPath = srcDir + "/GSWP3.%s.%04d-%04d.nc"%(varName,Year,Year)
-            #srcPath = srcDir + "/GSWP3.BC.%s.3hrMap.%04d.nc"%(varName, Year)
-
             ncIn  = Dataset(srcPath,"r",format="NETCDF")
-            a3in  = ncIn.variables[varName][:]
         elif ver=="org":
             ncIn  = gswp.load_nc(varName=varName, Year=Year)
-            a3in  = ncIn.variables[varName][:]
 
-        elif ver=="sts":
-            baseDir = "/data2/s_wata/tmp/GSWP3test/cor"
-            srcDir  = baseDir
-            srcPath = srcDir + "/cor_gswp3_%04d.hpn"%(Year)
-            a3in    = fromfile(srcPath, float32).reshape(-1,ny,nx)
-
+        a3in  = ncIn.variables[varName][:]
         Lat   = ncIn.variables["lat"][:]
         Lon   = ncIn.variables["lon"][:]
         LatBnd= arange(-90,90+0.001,0.5)
@@ -70,17 +58,20 @@ for varName in lvarName:
             a2dat = a2dat*60*60*24
         if varName in ["Snowf"]:
             a2dat = ma.masked_equal(a2dat,0)
-        if varName in ["PSurf"]:
-            a2dat = a2dat/100.
 
-        print srcPath
-        print "-- a3in --"
-        print a3in.min(), a3in.mean(), a3in.max()
-        print "-- a2dat --"
+        print "*"*50
+        print ver, varName, Year
+        print "3-hourly"
+        if varName in ["Prcp","Rainf","Snowf"]:
+            print a3in.min()*60*60*24, "----",a3in.max()*60*60*24
+        else:
+            print a3in.min(), a3in.mean(),a3in.max()
+        print ""
+        print "annual (converted)"
         print a2dat.min(),a2dat.mean(), a2dat.max()
-        print a2dat
-        #-- figure ---
 
+        #-- figure ---
+        """
         # Figure
         BBox  = [[-90,0],[90,360]]
         [[lllat,lllon],[urlat,urlon]] = BBox
@@ -101,7 +92,7 @@ for varName in lvarName:
         M.drawmeridians(arange(-180,360+0.1,30), labels=[0,0,0,1], fontsize=8, linewidth=0.3, rotation=45)
         
         # title
-        stitle = "%s %s %04d"%(ver, varName, Year)
+        stitle = "new %s"%(varName)
         plt.title(stitle)
         
         # colorbar
@@ -110,10 +101,11 @@ for varName in lvarName:
         # save
         figDir  = "/work/a01/utsumi/GSWP3/fig"
         util.mk_dir(figDir)
-        figPath = figDir + "/map.simgle.%s.%s.%04d.png"%(ver, varName,Year)
+        figPath = figDir + "/map.simgle.new.%s.%04d.png"%(varName,Year)
         plt.savefig(figPath)
         print figPath
         #-------------
+        """
 
 
     

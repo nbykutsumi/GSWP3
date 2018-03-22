@@ -1,11 +1,9 @@
 from numpy import *
 import numpy as np
 import os, sys
-from netCDF4 import Dataset
+import WFDEI
 
-varName = "prcp"
-Year    = 2000
-baseDir = "/data1/hjkim/PRINCETON/ncdf"
-srcDir  = baseDir + "/%04d"%(Year)
-srcPath = srcDir + "/%s_3hourly_%s-%s.nc"%(varName, Year,Year)
-nc = Dataset(srcPath, "r", format="NETCDF")
+wf = WFDEI.WFDEI()
+varName = "PSurf"
+nc = wf.loac_nc(varName, 2014,1, compressed=True)
+print nc

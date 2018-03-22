@@ -22,8 +22,16 @@ Lon1   = gswp.Lon
 LatBnd1= gswp.LatBnd
 LonBnd1= gswp.LonBnd
 
-if prjName2== "PRINCETON":
+if   prjName2== "PRINCETON":
     dc    = PRINCETON.PRINCETON()
+    ny2,nx2 = dc.ny, dc.nx
+    Lat2   = dc.Lat
+    Lon2   = dc.Lon
+    LatBnd2= dc.LatBnd
+    LonBnd2= dc.LonBnd
+
+elif prjName2== "CRUNCEP":
+    dc    = CRUNCEP.CRUNCEP()
     ny2,nx2 = dc.ny, dc.nx
     Lat2   = dc.Lat
     Lon2   = dc.Lon
@@ -31,14 +39,14 @@ if prjName2== "PRINCETON":
     LonBnd2= dc.LonBnd
    
 
-lvarName = ["SWdown"]
-#lvarName = ["SWdown","LWdown","Prcp","Wind","Tair","Qair","PSurf"]
+#lvarName = ["SWdown"]
+lvarName = ["SWdown","LWdown","Prcp","Wind","Tair","Qair","PSurf"]
 #lvarName = ["PSurf"]
 #lseason  = ["ALL","DJF","MAM","JJA","SON"]
-lseason = ["MAM"]
+lseason = ["ALL"]
 baseDir = "/work/a01/utsumi/GSWP3"
 per_day = 8 # [#/days] (3-hour-step)
-iYear = 1901   # GSWP3
+#iYear = 1901   # GSWP3
 iYear = 1956   # PRINCETON
 #eYear = 2014
 #eYear = 2010
@@ -48,10 +56,14 @@ lMon  = range(1,12+1)
 nYear = len(lYear)
 miss  = -9999.
 
-vminmax = {"SWdown":[100,300], "LWdown":[100,400], "Prcp":[0,10], "Wind":[0,60], "Tair":[230,310], "Qair":[0.002, 0.02], "PSurf":[800,1020]}
+a2elev = gswp.load_elevation()
+print a2elev.shape
+print a2elev
+
+vminmax = {"SWdown":[-20,20], "LWdown":[-20,20], "Prcp":[-1,1], "Wind":[-4,4], "Tair":[-2,2], "Qair":[-0.006, 0.006], "PSurf":[-20,20]}
 for varName in lvarName:
 
-    #-- (1) GSWP3, (2) Comared data ---
+    #-- (1) GSWP3, (2) Compared data ---
     a2all1 = zeros([ny1,nx1],float32)
     a2djf1 = zeros([ny1,nx1],float32)
     a2mam1 = zeros([ny1,nx1],float32)
@@ -138,19 +150,22 @@ for varName in lvarName:
         a2dat2 = Regrid.biIntp(Lat2,Lon2,a2dat2, Lat1, Lon1, miss=miss).reshape(ny1,nx1)
         
         print a2dat2.shape
+        a2dif = a2dat1 - a2dat2
+        a2dif = ma.masked_where(a2elev<0, a2dif)
+        print a2dif
 
-        """ 
+
         # Figure 
         BBox  = [[-90,0],[90,360]]
         [[lllat,lllon],[urlat,urlon]] = BBox
-        X,Y   = meshgrid( LonBnd, LatBnd )
+        X,Y   = meshgrid( LonBnd1, LatBnd1 )
         vmin,vmax = vminmax[varName]
     
         figmap   = plt.figure(figsize=(5,3))
         axmap    = figmap.add_axes([0.1,0.1,0.8,0.8])
         M     = Basemap(resolution="l", llcrnrlat=lllat,llcrnrlon=lllon,urcrnrlat=urlat,urcrnrlon=urlon, ax=axmap)
-        im    = M.pcolormesh(X,Y, a2dat, cmap="jet", vmin=vmin, vmax=vmax)
-        #im    = M.pcolormesh(X,Y, a2dat, cmap="jet")
+        im    = M.pcolormesh(X,Y, a2dif, cmap="RdBu_r", vmin=vmin, vmax=vmax)
+        #im    = M.pcolormesh(X,Y, a2dif, cmap="RdBu_r")
 
         # coastlines
         M.drawcoastlines()
@@ -160,7 +175,7 @@ for varName in lvarName:
         M.drawmeridians(arange(-180,360+0.1,30), labels=[0,0,0,1], fontsize=8, linewidth=0.3, rotation=45)
  
         # title
-        stitle = "%s %s (%s) %04d-%04d"%(prjName, varName, season, iYear, eYear)
+        stitle = "%s-%s %s (%s) %04d-%04d"%(prjName1, prjName2, varName, season, iYear, eYear)
         plt.title(stitle)
         
         # colorbar
@@ -169,7 +184,6 @@ for varName in lvarName:
         # save
         figDir  = baseDir + "/fig"
         util.mk_dir(figDir)
-        figPath = figDir + "/map.%s.%04d-%04d.%s.%s.png"%(prjName,iYear,eYear,varName,season)
+        figPath = figDir + "/dif.map.%s-%s.%04d-%04d.%s.%s.png"%(prjName1, prjName2,iYear,eYear,varName,season)
         plt.savefig(figPath)
         print figPath
-        """ 

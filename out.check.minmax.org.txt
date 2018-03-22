@@ -1,0 +1,76 @@
+/usr/local/lib/python2.7/dist-packages/matplotlib/__init__.py:1405: UserWarning: 
+This call to matplotlib.use() has no effect because the backend has already
+been chosen; matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+or matplotlib.backends is imported for the first time.
+
+  warnings.warn(_use_error_msg)
+**************************************************
+org SWdown 2009
+3-hourly
+0.0 164.171 1693.58
+
+annual (converted)
+62.1901 164.173 292.972
+**************************************************
+org SWdown 2010
+3-hourly
+0.0 162.946 1682.82
+
+annual (converted)
+61.9394 162.947 294.613
+**************************************************
+org LWdown 2009
+3-hourly
+32.9273 306.209 579.343
+
+annual (converted)
+95.073 306.21 431.139
+**************************************************
+org LWdown 2010
+3-hourly
+34.8655 306.914 587.88
+
+annual (converted)
+86.6275 306.916 434.592
+**************************************************
+org Tair 2009
+3-hourly
+150.178 280.072 356.815
+
+annual (converted)
+221.31 280.069 304.562
+**************************************************
+org Tair 2010
+3-hourly
+156.529 280.026 353.022
+
+annual (converted)
+218.769 280.025 304.983
+**************************************************
+org Qair 2009
+3-hourly
+0.0 0.0077448 0.295106
+
+annual (converted)
+0.000116169 0.00774482 0.0231351
+**************************************************
+org Qair 2010
+3-hourly
+0.0 0.00780077 0.269994
+
+annual (converted)
+9.76373e-05 0.00780076 0.024071
+**************************************************
+org PSurf 2009
+3-hourly
+50616.9 96692.6 106416.0
+
+annual (converted)
+51593.2 96691.0 103546.0
+**************************************************
+org PSurf 2010
+3-hourly
+50151.9 96670.3 107827.0
+
+annual (converted)
+51497.3 96669.6 103817.0
