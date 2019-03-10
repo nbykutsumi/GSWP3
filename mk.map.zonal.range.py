@@ -18,8 +18,9 @@ lprjName = ["GSWP3","PRINCETON","CRUNCEP","WFDEI"]
 #lvarName = ["Prcp"]
 #lvarName = ["SWdown","LWdown","Rainf","Snowf","Wind","Tair","Qair","PSurf"]
 #lvarName = ["SWdown","LWdown","Prcp","Wind","Tair","Qair","PSurf"]
-#lvarName = ["SWdown","LWdown","Prcp","Wind","Qair","PSurf"]
-lvarName = ["Qair","PSurf"]
+lvarName = ["SWdown","LWdown","Prcp","Wind","Qair"]
+#lvarName = ["Qair","PSurf"]
+#lvarName = ["PSurf"]
 #lvarName = ["Wind"]
 #lseason  = ["ALL","DJF","MAM","JJA","SON"]
 lseason = ["ALL"]
@@ -27,8 +28,8 @@ baseDir = "/work/a01/utsumi/GSWP3"
 #iYear = 1901   # GSWP3
 #iYear = 1956   # PRINCETON
 #eYear = 2014
-iYear = 1980
-eYear = 1980
+iYear = 1979
+eYear = 2010
 #eYear = 1905
 lYear = range(iYear,eYear+1)
 lMon  = range(1,12+1)
@@ -39,7 +40,8 @@ us = Regrid.UpScale()
 
 vminmax = {"SWdown":[100,300], "LWdown":[100,400], "Prcp":[0,10], "Rainf":[0,10],"Snowf":[0,10],"Wind":[0,60], "Tair":[230,310], "Qair":[0.002, 0.02], "PSurf":[800,1020]}
 for varName in lvarName:
-    dldat = {"%s"%(season):[] for season in lseason}
+    dla1dat = {"%s"%(season):[] for season in lseason}
+    dla2dat = {"%s"%(season):[] for season in lseason}
 
     for prjName in lprjName:
         if prjName in ["GSWP3","CRUNCEP","WFDEI"]:
@@ -144,25 +146,56 @@ for varName in lvarName:
 
 
             a1dat = a2dat.mean(axis=1)
-            dldat[season].append(a1dat)
+            dla1dat[season].append(a1dat)
+            dla2dat[season].append(a2dat)
 
-    print dldat
+    da3dat = {}
+    for season in lseason:
+        da3dat[season] = array(dla2dat[season]) # list to array
     #""" 
     # Figure 
     for season in lseason:
-        fig   = plt.figure(figsize=(1,3))
-        ax    = fig.add_axes([0.32,0.1,0.5,0.8])
+        fig   = plt.figure(figsize=(4,2.3))
+
+        #-- Map (range) --
+        ax1   = fig.add_axes([0.1,0.22,0.6,0.75])
+        da3dat[season] = ma.masked_equal(da3dat[season], miss)
+        #a2fig = da3dat[season].max(axis=0) - da3dat[season].min(axis=0)
+        a2fig = da3dat[season].std(axis=0)
+        a2fig = ma.masked_invalid(a2fig / da3dat[season].mean(axis=0))
+        a2fig = ma.masked_where(a2orog==-999., a2fig)
+        LatOneBnd = arange(-90,90+0.001, 1.0)
+        LonOneBnd = arange(0,360+0.001, 1.0)
+        vmin, vmax = 0, 0.2
+
+        X,Y = meshgrid(LonOneBnd, LatOneBnd)
+
+        M   = Basemap(resolution="l", llcrnrlat=-90, llcrnrlon=0, urcrnrlat=90, urcrnrlon=360)
+        im  = M.pcolormesh(X,Y, a2fig, cmap="jet", vmin=vmin, vmax=vmax)
+
+        M.drawcoastlines()
+        M.drawparallels(arange(-90,90+0.1,30), labels=[1,0,0,0], fontsize=8, linewidth=0.3)
+        M.drawmeridians(arange(-180,360+0.1,30), labels=[0,0,0,1], fontsize=8, linewidth=0.3, rotation=45)
+
+        # colorbar
+        axcbar = fig.add_axes([0.1,0.12,0.6, 0.05])
+        plt.colorbar(im, orientation="horizontal", cax=axcbar, ticks=arange(vmin,vmax+0.001, 0.05))
+
+        #ax1   = fig.add_axes([0.1,0.22,0.6,0.75])
+        #ax2   = fig.add_axes([0.7,0.22,0.2,0.75])
+        ax2   = fig.add_axes([0.8,0.34,0.1,0.515])
         LatOne= arange(-89.5,89.5+0.001,1.0)
         lim = []
-        for dat in dldat[season]:
-            im = ax.plot(dat, LatOne, linewidth=0.8)
+        vmin, vmax = vminmax[varName]
+        for dat in dla1dat[season]:
+            im = ax2.plot(dat, LatOne, linewidth=0.8)
             lim.append(im[0])
 
-        ax.set_ylim([-90,90]) 
-        
+        ax2.set_ylim([-90,90]) 
+        ax2.set_xlim([vmin, vmax]) 
         # title
-        stitle = "%s"%(season)
-        plt.title(stitle)
+        stitle = "%s %s"%(varName, season)
+        plt.suptitle(stitle)
         
         # save
         figDir  = baseDir + "/fig"
@@ -171,12 +204,10 @@ for varName in lvarName:
         plt.savefig(figPath)
         print figPath
 
-        print lim
         # Legend
-        legPath = figDir + "/legend.plot.zonal.png"
-        figleg  = plt.figure(figsize=(1.5,1.5))
-        figleg.legend(lim, lprjName)
-        figleg.savefig(legPath)
-        plt.close()
-        print legPath
-    #""" 
+        #legPath = figDir + "/legend.plot.zonal.png"
+        #figleg  = plt.figure(figsize=(1.5,1.5))
+        #figleg.legend(lim, lprjName)
+        #figleg.savefig(legPath)
+        #plt.close()
+        #print legPath

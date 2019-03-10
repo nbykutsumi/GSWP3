@@ -25,11 +25,17 @@ lvarName = ["SWdown","LWdown","Prcp","Wind","Tair","Qair","PSurf"]
 baseDir = "/work/a01/utsumi/GSWP3"
 #calFlag = False
 calFlag = True
+#calctype= 'mean'  # mean, sum, std
+calctype= 'std'  # mean, sum, std
+
 per_day = 8 # [#/days] (3-hour-step)
 #iYear = 1956
-iYear = 1948
+#iYear = 1948
 #eYear = 2014
-eYear = 1956
+
+iYear = 1979
+eYear = 2010
+
 lYear = range(iYear,eYear+1)
 lMon  = range(1,12+1)
 miss  = -9999.
@@ -43,7 +49,15 @@ for varName in lvarName:
         varLocal = dvarLocal[varName]
         ncIn  = pg.load_nc(varName=varLocal, Year=Year)
         a3in  = ncIn.variables[varLocal][:].reshape(-1,ny,nx)
-        a3mon = util.nhourly2monthly(a3in, nh=3, calc="mean", miss=miss)
+
+        if calctype=='mean':
+            a3mon = util.nhourly2monthly(a3in, nh=3, calc=calctype, miss_in=2e+20, miss_out=miss)
+        elif calctype == 'std':
+            a3mon = util.nhourly2day2monthly(a3in, nh=3, calc=calctype, miss_in=2e+20, miss_out=miss)
+        else:
+            print 'check calctype',calctype
+            sys.exit()
+
 
         if ma.isMaskedArray(a3mon)==True:
             a3mon = a3mon.filled(miss) 
@@ -51,7 +65,7 @@ for varName in lvarName:
         #outDir = baseDir + "/TimeLat"
         outDir = baseDir + "/Mon/PRINCETON"
         util.mk_dir(outDir)
-        outPath= outDir + "/%s.%s.MonMap.%04d.npy"%(prjName, varName, Year)
+        outPath= outDir + "/%s.%s.%s.MonMap.%04d.npy"%(prjName, varName, calctype, Year)
         np.save(outPath, a3mon)
         print outPath
-    
+         

@@ -22,8 +22,8 @@ Year  = 2010
 lvarName = ["Prcp","Rainf","Snowf"]
 #lvarName = ["Wind"]
 #lvarName = ["Tair","Qair","PSurf"]
-baseDir1 = "/data2/hjkim/GSWP3/in/EXP1"
-baseDir2 = "/data2/hjkim/GSWP3/from_tank.bin/out"
+baseDir1 = "/work/data2/hjkim/GSWP3/in/EXP1"
+baseDir2 = "/work/data2/hjkim/GSWP3/from_tank.bin/out"
 
 vminmax = {"Prcp":[-1,1],"Rainf":[-1,1],"Snowf":[-1,1],"SWdown":[-20,20], "LWdown":[-20,20], "Wind":[-4,4], "Tair":[-2,2], "Qair":[-0.006, 0.006], "PSurf":[-20,20]}
 

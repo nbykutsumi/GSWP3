@@ -43,7 +43,7 @@ for varName in lvarName:
     for Year in lYear:
     #for Year in lYear[::20]:
         if ver=="new":
-            baseDir = "/data2/hjkim/GSWP3/from_tank.bin/out"
+            baseDir = "/work/data2/hjkim/GSWP3/from_tank.bin/out"
             srcDir  = baseDir + "/%s"%(varName)
             srcPath = srcDir + "/GSWP3.%s.%04d-%04d.nc"%(varName,Year,Year)
             #srcPath = srcDir + "/GSWP3.BC.%s.3hrMap.%04d.nc"%(varName, Year)
@@ -55,7 +55,7 @@ for varName in lvarName:
             a3in  = ncIn.variables[varName][:]
 
         elif ver=="sts":
-            baseDir = "/data2/s_wata/tmp/GSWP3test/cor"
+            baseDir = "/work/data2/s_wata/tmp/GSWP3test/cor"
             srcDir  = baseDir
             srcPath = srcDir + "/cor_gswp3_%04d.hpn"%(Year)
             a3in    = fromfile(srcPath, float32).reshape(-1,ny,nx)

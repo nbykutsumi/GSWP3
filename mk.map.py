@@ -1,6 +1,6 @@
 import matplotlib as mpl
 mpl.use("Agg")
-import GSWP3, PRINCETON, CRUNCEP
+#import GSWP3, PRINCETON, CRUNCEP
 from numpy import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,20 +10,21 @@ from datetime import datetime, timedelta
 from mpl_toolkits.basemap import Basemap
 import gswp_func
 
-#lprjName = ["GSWP3","PRINCETON","CRUNCEP","WFDEI"]
-lprjName = ["PRINCETON"]
+lprjName = ["GSWP3","PRINCETON","CRUNCEP","WFDEI"]
+#lprjName = ["PRINCETON","CRUNCEP","WFDEI"]
 
-lvarName = ["SWdown"]
-#lvarName = ["SWdown","LWdown","Rainf","Snowf","Wind","Tair","Qair","PSurf"]
-#lvarName = ["SWdown","LWdown","Rainf","Snowf","Wind","Tair","Qair","PSurf"]
-#lvarName = ["SWdown","LWdown","Wind","Qair","PSurf"]
+#lvarName = ["SWdown"]
+#lvarName = ["SWdown","LWdown","Prcp","Wind","Tair","Qair","PSurf"]
+lvarName = ["Prcp","Wind","Tair","Qair","PSurf"]
 #lseason  = ["ALL","DJF","MAM","JJA","SON"]
 lseason = ["ALL"]
 baseDir = "/work/a01/utsumi/GSWP3"
 #iYear = 1901   # GSWP3
 #iYear = 1956   # PRINCETON
 #eYear = 2014
-iYear = 2010
+#iYear = 2010
+#eYear = 2010
+iYear = 1979
 eYear = 2010
 #eYear = 1905
 lYear = range(iYear,eYear+1)
@@ -32,50 +33,7 @@ nYear = len(lYear)
 miss  = -9999.
 
 
-"""
-if prjName == "GSPW3":
-    expr = "EXP1"
-    gswp = GSWP3.GSWP3()
-    gswp(expr=expr)
-    ny,nx = gswp.ny, gswp.nx
-    Lat   = gswp.Lat
-    Lon   = gswp.Lon
-    LatBnd= gswp.LatBnd
-    LonBnd= gswp.LonBnd
-elif prjName== "PRINCETON":
-    pg    = PRINCETON.PRINCETON()
-    ny,nx = pg.ny, pg.nx
-    Lat   = pg.Lat
-    Lon   = pg.Lon
-    LatBnd= pg.LatBnd
-    LonBnd= pg.LonBnd
-elif prjName== "CRUNCEP":
-    cru    = CRUNCEP.CRUNCEP()
-    ny,nx = cru.ny, cru.nx
-    Lon   = cru.Lon
-    LatBnd= cru.LatBnd
-    LonBnd= cru.LonBnd
-   
-    Lat   = cru.Lat[::-1]
-    Lon   = concatenate([Lon[nx/2:], Lon[:nx/2]])
-    LatBnd= LatBnd[::-1]
-    LonBnd= arange(0, 360+0.01, 0.5)    
-elif prjName== "WFDEI":
-    cru    = CRUNCEP.CRUNCEP()
-    ny,nx = cru.ny, cru.nx
-    Lon   = cru.Lon
-    LatBnd= cru.LatBnd
-    LonBnd= cru.LonBnd
-   
-    Lat   = cru.Lat[::-1]
-    Lon   = concatenate([Lon[nx/2:], Lon[:nx/2]])
-    LatBnd= LatBnd[::-1]
-    LonBnd= arange(0, 360+0.01, 0.5)    
-"""
-
-
-
-vminmax = {"SWdown":[100,300], "LWdown":[100,400], "Prcp":[0,10], "Rainf":[0,10],"Snowf":[0,10],"Wind":[0,60], "Tair":[230,310], "Qair":[0.002, 0.02], "PSurf":[800,1020]}
+vminmax = {"SWdown":[100,300], "LWdown":[100,400], "Prcp":[0,8], "Rainf":[0,8],"Snowf":[0,8],"Wind":[0,10], "Tair":[230,310], "Qair":[0.002, 0.02], "PSurf":[800,1020]}
 for prjName in lprjName:
     for varName in lvarName:
 
@@ -93,6 +51,8 @@ for prjName in lprjName:
             LatBnd  = arange(-90,90+0.001, 1.0)
             LonBnd  = arange(0,360+0.001,1.0)
             res     = "one"
+        else:
+            print "check prjName",prjName
 
         a2orog= gswp_func.load_orog(res=res)
  
@@ -104,12 +64,24 @@ for prjName in lprjName:
     
         for Year in lYear:
             print Year
-        
-            srcDir  = baseDir + "/Mon/%s"%(prjName) 
-            srcPath = srcDir + "/%s.%s.MonMap.%04d.npy"%(prjName, varName, Year)
-            a3in    = np.load(srcPath)
-            a3in    = ma.masked_equal(a3in,miss)
-    
+            if (varName=="Prcp")&(prjName in ["GSWP3","WFDEI"]):
+                srcDir  = baseDir + "/Mon/%s"%(prjName)
+                srcPath1 = srcDir + "/%s.%s.mean.MonMap.%04d.npy"%(prjName, "Rainf", Year)
+                a3in1    = np.load(srcPath1)
+                a3in1    = ma.masked_equal(a3in1,miss)
+
+                srcPath2 = srcDir + "/%s.%s.mean.MonMap.%04d.npy"%(prjName, "Snowf", Year)
+                a3in2    = np.load(srcPath2)
+                a3in2    = ma.masked_equal(a3in2,miss)
+
+                a3in     = a3in1 + a3in2
+
+            else:
+                srcDir  = baseDir + "/Mon/%s"%(prjName)
+                srcPath = srcDir + "/%s.%s.mean.MonMap.%04d.npy"%(prjName, varName, Year)
+                a3in    = np.load(srcPath)
+                a3in    = ma.masked_equal(a3in,miss)
+
             a2all   = a2all + a3in.mean(axis=0)
             a2djf   = a2djf + a3in[[0,1,11],:,:].mean(axis=0)
             a2mam   = a2mam + a3in[[2,3,4], :,:].mean(axis=0)
@@ -135,10 +107,26 @@ for prjName in lprjName:
             elif season=="SON":
                 a2dat = a2son
     
+
+            # coeficients
+            # Prcp
             if varName in ["Prcp","Rainf","Snowf"]:
-                a2dat = a2dat *60*60*24   # mm/day
+                if prjName =="CRUNCEP":
+                    a2dat = a2dat * 4  # mm/6hr --> mm/day
+                else:
+                    a2dat = a2dat *60*60*24   # mm/day
             elif varName=="PSurf":
                 a2dat = a2dat * 0.01
+
+            # SWdown
+            if (prjName=="CRUNCEP")&(varName in ["SWdown"]):
+                coef = 1./(60*60*6)
+    
+            else:
+                coef = 1.0
+
+            a2dat = a2dat*coef 
+
 
             # mask sea
             a2dat = ma.masked_where(a2orog==-999., a2dat)
@@ -151,6 +139,7 @@ for prjName in lprjName:
             #sys.exit()
         
             figmap   = plt.figure(figsize=(5,3))
+
             axmap    = figmap.add_axes([0.1,0.1,0.8,0.8])
             M     = Basemap(resolution="l", llcrnrlat=lllat,llcrnrlon=lllon,urcrnrlat=urlat,urcrnrlon=urlon, ax=axmap)
             im    = M.pcolormesh(X,Y, a2dat, cmap="jet", vmin=vmin, vmax=vmax)

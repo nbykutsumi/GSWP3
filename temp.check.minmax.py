@@ -40,7 +40,7 @@ vminmax = {"SWdown":[100,300], "LWdown":[100,400], "Prcp":[0,10], "Rainf":[0,10]
 for varName in lvarName:
     for Year in lYear:
         if ver=="new":
-            baseDir = "/data2/hjkim/GSWP3/from_tank.bin/out"
+            baseDir = "/work/data2/hjkim/GSWP3/from_tank.bin/out"
             srcDir  = baseDir + "/%s"%(varName)
             srcPath = srcDir + "/GSWP3.%s.%04d-%04d.nc"%(varName,Year,Year)
             ncIn  = Dataset(srcPath,"r",format="NETCDF")

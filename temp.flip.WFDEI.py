@@ -11,4 +11,14 @@ srcDir  = baseDir + "/Mon/%s"%(prjName)
 print srcDir
 lsrcPath = glob.glob(srcDir+ "/*")
 for srcPath in lsrcPath:
-    print srcPath
+    fName = os.path.basename(srcPath)
+    varName = fName.split(".")[1]
+    Year    = int(fName.split(".")[3])
+    if Year == 2000:
+        if not varName in ["SWdown", "LWdown"]:
+            continue
+    #print varName, Year
+    #a = np.load(srcPath)
+    #a = flipud(a)
+    #np.save(srcPath, a)
+    #print srcPath

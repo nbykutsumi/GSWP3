@@ -11,7 +11,7 @@ for varName in lvarName:
     for Year in lYear:
         # read attributes from sample file
         YearTmp    = 1995
-        srcDir  = "/data2/hjkim/GSWP3/in/EXP1/%s"%(varName)
+        srcDir  = "/work/data2/hjkim/GSWP3/in/EXP1/%s"%(varName)
         srcPath = srcDir + "/GSWP3.BC.%s.3hrMap.%04d.nc"%(varName, YearTmp)
         
         ncIn = Dataset(srcPath, "r", format="NETCDF4")

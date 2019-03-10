@@ -46,8 +46,8 @@ def main(args,opts):
     #srcpath = int(args[0])
     #despath = int(args[1])
 
-    srcpath = '/data2/hjkim/GSWP3/in/EXP1/Wind.ori/GSWP3.BC.Wind.3hrMap.1901.nc'
-    despath = '/data2/hjkim/GSWP3/from_tank.bin/out/Wind/GSWP3.Wind.2013-2013.nc'
+    srcpath = '/work/data2/hjkim/GSWP3/in/EXP1/Wind.ori/GSWP3.BC.Wind.3hrMap.1901.nc'
+    despath = '/work/data2/hjkim/GSWP3/from_tank.bin/out/Wind/GSWP3.Wind.2013-2013.nc'
 
     # EDIT --------------------------------------------------------------------
     addattr = odict((

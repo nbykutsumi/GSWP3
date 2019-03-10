@@ -25,7 +25,7 @@ class GSWP3(object):
         return nc
 
     def load_elevation(self):
-        srcPath = "/data1/hjkim/CRU/TS3.23/cru_ts3.23.1901.2014.halfdesg.elv.02^"
+        srcPath = "/work/data1/hjkim/CRU/TS3.23/cru_ts3.23.1901.2014.halfdesg.elv.02^"
         a2in = fromfile(srcPath, float32).reshape(360,720)
         a2elev = concatenate([a2in[:,360:], a2in[:,:360]], axis=1)
         return a2elev
