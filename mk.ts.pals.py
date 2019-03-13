@@ -1,0 +1,80 @@
+from numpy import *
+from datetime import datetime, timedelta
+import myfunc.util as util
+import calendar
+import glob
+import netCDF4
+import sys
+import numpy as np
+
+prjName= 'PALS'
+srcDir = '/work/data1/hjkim/PALS/1.4_met'
+DTimeBase = datetime(2003,1,1,0,30,0)
+obststp  = 0.5 # hour
+ssearch  = srcDir + '/*'
+lsrcPath = glob.glob(ssearch)
+iYear = 2003
+#iYear = 2004
+eYear = 2010
+lYear = range(iYear,eYear+1)
+#tstp  = 3  # hour
+tstp  = 6  # hour
+lavetype = ['pre','cnt']
+
+#lvarName = ["Rainf","Snowf","SWdown","LWdown","Tair","Qair","PSurf","Prcp","Wind"]
+lvarName = ["Rainf","SWdown","LWdown","Tair","Qair","PSurf","Wind"]
+
+for srcPath in lsrcPath:
+    siteName = srcPath.split('/')[-1].split('Fluxnet')[0]
+    print siteName
+    nc  = netCDF4.Dataset(srcPath)
+    atime = nc.variables['time'][:]
+
+    for varName in lvarName:
+        adat  = nc.variables[varName][:]
+        ndat  = len(adat)
+
+        DTimeDat0 = DTimeBase + timedelta(seconds=atime[0])
+        DTimeDat1 = DTimeBase + timedelta(seconds=atime[-1])
+
+        for avetype in lavetype:
+            if avetype =='pre':
+                dhour0 = tstp
+                dhour1 = 0
+            elif avetype =='cent':
+                dhour0 = tstp*0.5
+                dhour1 = tstp*0.5
+  
+            for Year in lYear:
+                iDTime = datetime(Year,1,1,0,0)        
+                eDTime = datetime(Year,12,31,24-tstp)
+                dDTime = timedelta(hours=tstp)
+                lDTime = util.ret_lDTime(iDTime,eDTime,dDTime)
+        
+                aout = ones(len(lDTime),float32)*(-9999)
+                for i,DTime in enumerate(lDTime):
+                    irec  = (DTime - DTimeDat0).total_seconds()/3600 / obststp
+                    irec  = int(irec)
+                    irec0 = irec - int(dhour0/obststp) +1
+                    irec1 = irec + int(dhour1/obststp) +1
+    
+                    #print DTime 
+                    if (irec0>=ndat)or(irec1<=0):
+                        continue
+    
+                    dat = adat[irec0:irec1].mean()
+                    aout[i] = dat
+    
+                #-- Save ---
+                outDir = '/work/a01/utsumi/GSWP3/insitu/Tair/Amplero'
+                outDir = '/work/a01/utsumi/GSWP3/insitu/%s/%s'%(varName, siteName)
+                outPath= outDir + '/%s.%s.%dhr.%04d.npy'%(prjName, avetype, tstp, Year)
+                #dtime0 = DTimeBase + timedelta(seconds=atime[irec0])
+                #dtime1 = DTimeBase + timedelta(seconds=atime[irec1])
+                #print dtime0,dtime1
+                #print adat[irec0:irec1]
+                #print adat[irec0:irec1].mean()
+                #print aout[:3]
+                #print aout[-3:]
+                np.save(outPath,aout.astype(float32))
+                print outPath

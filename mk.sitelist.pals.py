@@ -28,7 +28,7 @@ for srcPath in lsrcPath:
 #-- Save ---
 
 outDir  = '/work/a01/utsumi/GSWP3/insitu'
-outPath = outDir + '/sitelist.PASL.csv'
+outPath = outDir + '/sitelist.PALS.csv'
 sout    = util.list2csv(lout)
 f=open(outPath,'w'); f.write(sout); f.close()
 print outPath

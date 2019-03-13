@@ -1,0 +1,185 @@
+OrderedDict([(u'x', <type 'netCDF4._netCDF4.Variable'>
+float64 x(x)
+    units: 
+unlimited dimensions: 
+current shape = (1,)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'y', <type 'netCDF4._netCDF4.Variable'>
+float64 y(y)
+    units: 
+unlimited dimensions: 
+current shape = (1,)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'latitude', <type 'netCDF4._netCDF4.Variable'>
+float32 latitude(y, x)
+    units: degrees_north
+    missing_value: -9999.0
+    long_name: Latitude
+unlimited dimensions: 
+current shape = (1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'longitude', <type 'netCDF4._netCDF4.Variable'>
+float32 longitude(y, x)
+    units: degrees_east
+    missing_value: -9999.0
+    long_name: Longitude
+unlimited dimensions: 
+current shape = (1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'time', <type 'netCDF4._netCDF4.Variable'>
+float64 time(time)
+    units: seconds since 2002-01-01 00:30:00
+unlimited dimensions: time
+current shape = (70128,)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'SWdown', <type 'netCDF4._netCDF4.Variable'>
+float32 SWdown(time, y, x)
+    units: W/m^2
+    missing_value: -9999.0
+    long_name: Surface incident shortwave radiation
+    CF_name: surface_downwelling_shortwave_flux_in_air
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'z', <type 'netCDF4._netCDF4.Variable'>
+float64 z(z)
+    units: 
+unlimited dimensions: 
+current shape = (1,)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'Tair', <type 'netCDF4._netCDF4.Variable'>
+float32 Tair(time, z, y, x)
+    units: K
+    missing_value: -9999.0
+    long_name: Near surface air temperature
+    CF_name: surface_temperature
+unlimited dimensions: time
+current shape = (70128, 1, 1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'Rainf', <type 'netCDF4._netCDF4.Variable'>
+float32 Rainf(time, y, x)
+    units: mm/s
+    missing_value: -9999.0
+    long_name: Rainfall rate
+    CF_name: precipitation_flux
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'Qair', <type 'netCDF4._netCDF4.Variable'>
+float32 Qair(time, z, y, x)
+    units: kg/kg
+    missing_value: -9999.0
+    long_name: Near surface specific humidity
+    CF_name: surface_specific_humidity
+unlimited dimensions: time
+current shape = (70128, 1, 1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'Wind', <type 'netCDF4._netCDF4.Variable'>
+float32 Wind(time, z, y, x)
+    units: m/s
+    missing_value: -9999.0
+    long_name: Scalar windspeed
+    CF_name: wind_speed
+unlimited dimensions: time
+current shape = (70128, 1, 1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'PSurf', <type 'netCDF4._netCDF4.Variable'>
+float32 PSurf(time, y, x)
+    units: Pa
+    missing_value: -9999.0
+    long_name: Surface air pressure
+    CF_name: surface_air_pressure
+    source: Synthesized in PALS based on elevation and temperature
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'LWdown', <type 'netCDF4._netCDF4.Variable'>
+float32 LWdown(time, y, x)
+    units: W/m^2
+    missing_value: -9999.0
+    long_name: Surface incident longwave radiation
+    CF_name: surface_downwelling_longwave_flux_in_air
+    source: Entirely synthesized in PALS using Abramowitz (2012)
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'SWdown_qc', <type 'netCDF4._netCDF4.Variable'>
+int32 SWdown_qc(time, y, x)
+    units: -
+    missing_value: -9999
+    long_name: SWdown quality control flag
+    values: As fluxdata.org qcOK: 1 - ok, 0 - ??
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of -2147483647 used
+), (u'Tair_qc', <type 'netCDF4._netCDF4.Variable'>
+int32 Tair_qc(time, y, x)
+    units: -
+    missing_value: -9999
+    long_name: Tair quality control flag
+    values: As fluxdata.org qcOK: 1 - ok, 0 - ??
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of -2147483647 used
+), (u'Rainf_qc', <type 'netCDF4._netCDF4.Variable'>
+int32 Rainf_qc(time, y, x)
+    units: -
+    missing_value: -9999
+    long_name: Rainf quality control flag
+    values: As fluxdata.org qcOK: 1 - ok, 0 - ??
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of -2147483647 used
+), (u'Qair_qc', <type 'netCDF4._netCDF4.Variable'>
+int32 Qair_qc(time, y, x)
+    units: -
+    missing_value: -9999
+    long_name: Qair quality control flag
+    values: As fluxdata.org qcOK: 1 - ok, 0 - ??
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of -2147483647 used
+), (u'Wind_qc', <type 'netCDF4._netCDF4.Variable'>
+int32 Wind_qc(time, y, x)
+    units: -
+    missing_value: -9999
+    long_name: Wind quality control flag
+    values: As fluxdata.org qcOK: 1 - ok, 0 - ??
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of -2147483647 used
+), (u'PSurf_qc', <type 'netCDF4._netCDF4.Variable'>
+int32 PSurf_qc(time, y, x)
+    units: -
+    missing_value: -9999
+    long_name: PSurf quality control flag
+    values: As fluxdata.org qcOK: 1 - ok, 0 - ??
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of -2147483647 used
+), (u'LWdown_qc', <type 'netCDF4._netCDF4.Variable'>
+int32 LWdown_qc(time, y, x)
+    units: -
+    missing_value: -9999
+    long_name: LWdown quality control flag
+    values: As fluxdata.org qcOK: 1 - ok, 0 - ??
+unlimited dimensions: time
+current shape = (70128, 1, 1)
+filling on, default _FillValue of -2147483647 used
+), (u'elevation', <type 'netCDF4._netCDF4.Variable'>
+float32 elevation(y, x)
+    units: m
+    missing_value: -9999.0
+    long_name: Site elevation above sea level
+unlimited dimensions: 
+current shape = (1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+), (u'reference_height', <type 'netCDF4._netCDF4.Variable'>
+float32 reference_height(y, x)
+    units: m
+    missing_value: -9999.0
+    long_name: Measurement height on flux tower
+unlimited dimensions: 
+current shape = (1, 1)
+filling on, default _FillValue of 9.96920996839e+36 used
+)])
